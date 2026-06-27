@@ -1,0 +1,26 @@
+server:
+  port: 8101
+
+spring:
+  application:
+    name: business-service
+  config:
+    import: optional:configserver:http://localhost:15000
+  cloud:
+    config:
+      fail-fast: false
+
+business:
+  notice: 本地默认配置：business-service 未连接 Config Server 时使用该值
+
+eureka:
+  client:
+    registry-fetch-interval-seconds: 5
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,refresh,busrefresh

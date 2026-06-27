@@ -1,0 +1,8 @@
+business:
+  notice: Bus 动态刷新成功：满 50 减 10，夜间配送预计 25 分钟
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,refresh,busrefresh

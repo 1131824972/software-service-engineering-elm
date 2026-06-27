@@ -1,0 +1,14 @@
+Gateway LoadBalancer 验证结果
+接口：http://localhost:9000/api/business/health
+连续访问结果：
+1. business-service running on port 8102
+2. business-service running on port 8101
+3. business-service running on port 8102
+4. business-service running on port 8101
+5. business-service running on port 8102
+6. business-service running on port 8101
+7. business-service running on port 8102
+8. business-service running on port 8101
+9. business-service running on port 8102
+10. business-service running on port 8101
+结论：Gateway 通过 Eureka + Spring Cloud LoadBalancer 在两个 business-service 实例之间轮询。

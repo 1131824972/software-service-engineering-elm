@@ -1,0 +1,15 @@
+**/target/
+**/.idea/
+**/*.iml
+**/runtime-logs/
+**/node_modules/
+**/.npm-cache/
+**/dist/
+**/.vite/
+**/.env
+**/.env.*
+*.log
+*.tmp
+*.class
+*.jar
+!jmeter/**/*.jmx

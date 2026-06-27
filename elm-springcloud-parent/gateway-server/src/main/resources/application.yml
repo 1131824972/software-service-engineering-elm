@@ -1,0 +1,96 @@
+server:
+  port: 9000
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        wait-duration-in-open-state: 5s
+        failure-rate-threshold: 10
+        minimum-number-of-calls: 1
+        permitted-number-of-calls-in-half-open-state: 2
+        automatic-transition-from-open-to-half-open-enabled: true
+    instances:
+      userGatewayBreaker:
+        base-config: default
+      businessGatewayBreaker:
+        base-config: default
+      cartGatewayBreaker:
+        base-config: default
+      addressGatewayBreaker:
+        base-config: default
+      orderGatewayBreaker:
+        base-config: default
+
+spring:
+  application:
+    name: gateway-server
+  cloud:
+    gateway:
+      server:
+        webflux:
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowed-origin-patterns: "*"
+                allowed-methods: "*"
+                allowed-headers: "*"
+                allow-credentials: true
+          routes:
+            - id: user-route
+              uri: lb://user-service
+              predicates:
+                - Path=/api/user/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    name: userGatewayBreaker
+                    fallbackUri: forward:/userFallBack
+            - id: business-route
+              uri: lb://business-service
+              predicates:
+                - Path=/api/business/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    name: businessGatewayBreaker
+                    fallbackUri: forward:/businessFallBack
+            - id: cart-route
+              uri: lb://cart-service
+              predicates:
+                - Path=/api/cart/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    name: cartGatewayBreaker
+                    fallbackUri: forward:/cartFallBack
+            - id: address-route
+              uri: lb://address-service
+              predicates:
+                - Path=/api/address/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    name: addressGatewayBreaker
+                    fallbackUri: forward:/addressFallBack
+            - id: order-route
+              uri: lb://order-service
+              predicates:
+                - Path=/api/order/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    name: orderGatewayBreaker
+                    fallbackUri: forward:/orderFallBack
+
+eureka:
+  client:
+    registry-fetch-interval-seconds: 5
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway,circuitbreakers
